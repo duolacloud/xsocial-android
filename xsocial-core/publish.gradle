@@ -91,12 +91,12 @@ publishing {
             artifact javadocJar
             artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
             groupId 'com.duolacloud'
-            artifactId 'xsocial-core'
+            artifactId project.name
             version versionCode
             pom.withXml {
                 def root = asNode()
                 root.appendNode('description', 'A leading identity authentication service platform')
-                root.appendNode('name', 'xsocial-core')
+                root.appendNode('name', project.name)
                 root.appendNode('url', 'https://xauth.lucfish.com/')
                 root.children().last() + pomConfig
             }
@@ -112,7 +112,7 @@ bintray {
     publish = true
     pkg {
         repo = 'xsocial'
-        name = 'xsocial-core'
+        name = project.name
         userOrg = bintrayUser
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/duolacloud/xsocial-android.git'
