@@ -1,4 +1,4 @@
-include ':wechat'
-include ':core'
+include ':xsocial-wechat'
+include ':xsocial-core'
 include ':sample'
 rootProject.name = "xsocial-android"

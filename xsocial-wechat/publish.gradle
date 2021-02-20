@@ -1,4 +1,5 @@
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 def bintrayUser
 def bintrayApiKey
@@ -15,6 +16,7 @@ if(propertiesFile.exists()) {
     bintrayUser = System.getenv('BINTRAY_USER')
     bintrayApiKey = System.getenv('BINTRAY_KEY')
 }
+
 
 def versionCode = '1.0.1'
 def pomConfig = {
@@ -41,16 +43,33 @@ def pomConfig = {
     }
 }
 
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += configurations.compile
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+artifacts {
+    archives sourcesJar
+}
+
 publishing {
     publications {
         MyPublication(MavenPublication) {
+            artifact sourcesJar
+            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
             groupId 'com.duolacloud'
-            artifactId 'xsocial-wechat'
+            artifactId project.name
             version versionCode
             pom.withXml {
                 def root = asNode()
                 root.appendNode('description', 'A leading identity authentication service platform')
-                root.appendNode('name', 'xsocial-wechat')
+                root.appendNode('name', project.name)
                 root.appendNode('url', 'https://xauth.lucfish.com/')
                 root.children().last() + pomConfig
             }
@@ -66,15 +85,15 @@ bintray {
     publish = true
     pkg {
         repo = 'xsocial'
-        name = 'xsocial-wechat'
+        name = project.name
         userOrg = bintrayUser
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/duolacloud/xsocial-android.git'
         version {
             name = versionCode
             mavenCentralSync {
-                sync = true //[Default: true] Determines whether to sync the version to Maven Central.
-                user = 'edison' //OSS user token: mandatory
+                sync = false //[Default: true] Determines whether to sync the version to Maven Central.
+                user = bintrayUser //OSS user token: mandatory
                 password = 'it is a secret' //OSS user password: mandatory
                 close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
             }

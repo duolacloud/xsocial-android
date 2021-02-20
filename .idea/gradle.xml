@@ -11,9 +11,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/sample" />
-            <option value="$PROJECT_DIR$/wechat" />
+            <option value="$PROJECT_DIR$/xsocial-core" />
+            <option value="$PROJECT_DIR$/xsocial-wechat" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -1,4 +1,5 @@
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 def bintrayUser
 def bintrayApiKey
@@ -42,9 +43,53 @@ def pomConfig = {
     }
 }
 
+
+
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += configurations.compile
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task syncJavadoc(type: Sync, dependsOn: javadoc) {
+    from javadoc.destinationDir
+    into rootProject.file('docs')
+}
+
+javadoc {
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        author true
+        version true
+        String packageListRef = "${android.sdkDirectory}/docs/reference/"
+        linksOffline 'http://d.android.com/reference/', packageListRef
+    }
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+
 publishing {
     publications {
         MyPublication(MavenPublication) {
+            artifact sourcesJar
+            artifact javadocJar
+            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
             groupId 'com.duolacloud'
             artifactId 'xsocial-core'
             version versionCode
@@ -74,7 +119,7 @@ bintray {
         version {
             name = versionCode
             mavenCentralSync {
-                sync = true //[Default: true] Determines whether to sync the version to Maven Central.
+                sync = false //[Default: true] Determines whether to sync the version to Maven Central.
                 user = bintrayUser //OSS user token: mandatory
                 password = 'it is a secret' //OSS user password: mandatory
                 close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
