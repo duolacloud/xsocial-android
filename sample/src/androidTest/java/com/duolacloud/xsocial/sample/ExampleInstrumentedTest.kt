@@ -1,4 +1,4 @@
-package com.duolacloud.social.connections
+package com.duolacloud.xsocial.sample
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

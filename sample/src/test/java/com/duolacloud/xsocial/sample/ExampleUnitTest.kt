@@ -1,4 +1,4 @@
-package com.duolacloud.social.connections
+package com.duolacloud.xsocial.sample
 
 import org.junit.Test
 
