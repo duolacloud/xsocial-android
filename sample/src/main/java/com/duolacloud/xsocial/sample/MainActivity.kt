@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         XSocialAPI.init(XSocialOptions.Builder(this)
-            .registerSocialConnection("wechat:mobile", mapOf(
+            .registerSocialConnection("wechat", mapOf(
                 "appId" to "wxf90dd55bad731b4f"
             ))
             .build()
