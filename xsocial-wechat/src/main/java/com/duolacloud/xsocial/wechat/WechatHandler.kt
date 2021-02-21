@@ -21,7 +21,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 
 const val sScope = "snsapi_userinfo,snsapi_friend,snsapi_message"
 
-class MobileHandler: XSocialBaseHandler() {
+class WechatHandler: XSocialBaseHandler() {
     var wxApi: IWXAPI? = null
 
     private var mSocialAuthListener: XSocialAuthListener? = null
@@ -35,8 +35,8 @@ class MobileHandler: XSocialBaseHandler() {
             @Override
             override fun onResp(resp: BaseResp) {
                 when(resp.type) {
-                    1 -> this@MobileHandler.onAuthCallback(resp as SendAuth.Resp)
-                    2 -> this@MobileHandler.onShareCallback(resp as com.tencent.mm.opensdk.modelmsg.SendMessageToWX.Resp)
+                    1 -> this@WechatHandler.onAuthCallback(resp as SendAuth.Resp)
+                    2 -> this@WechatHandler.onShareCallback(resp as com.tencent.mm.opensdk.modelmsg.SendMessageToWX.Resp)
                 }
             }
 
@@ -113,7 +113,7 @@ class MobileHandler: XSocialBaseHandler() {
 
         if (!isAppInstalled) {
             activity?.runOnUiThread {
-                this@MobileHandler.mSocialAuthListener?.onError(platform, Throwable(XSocialErrorCode.NotInstall.message))
+                this@WechatHandler.mSocialAuthListener?.onError(platform, Throwable(XSocialErrorCode.NotInstall.message))
             }
             return
         }
@@ -180,7 +180,7 @@ class MobileHandler: XSocialBaseHandler() {
         req.transaction = this.buildTransaction(SimpleShareContentConvertor.getShareTypeStr(shareContent.shareType))
         req.message = WechatShareContentConvertor.convert(shareContent, mShareConfig?.compressListener)
         when (way) {
-            "weixin" -> req.scene = 0
+            "friend" -> req.scene = 0
             "circle" -> req.scene = 1
             "favorite" -> req.scene = 2
             else -> req.scene = 2
@@ -188,7 +188,7 @@ class MobileHandler: XSocialBaseHandler() {
 
         return if (req.message == null) {
             activity?.runOnUiThread{
-                this@MobileHandler.mSocialShareListener?.onError(
+                this@WechatHandler.mSocialShareListener?.onError(
                     "${platform}:${way}",
                     Throwable(XSocialErrorCode.UnKnowCode.message.toString() + "message = null")
                 )
@@ -196,7 +196,7 @@ class MobileHandler: XSocialBaseHandler() {
             false
         } else if (req.message.mediaObject == null) {
             activity?.runOnUiThread {
-                this@MobileHandler.mSocialShareListener?.onError(
+                this@WechatHandler.mSocialShareListener?.onError(
                     "${platform}:${way}",
                     Throwable(XSocialErrorCode.UnKnowCode.message.toString() + "mediaobject = null")
                 )
@@ -206,7 +206,7 @@ class MobileHandler: XSocialBaseHandler() {
             val r = wxApi?.sendReq(req) ?: false
             if (!r) {
                 activity?.runOnUiThread {
-                    this@MobileHandler.mSocialShareListener?.onError(
+                    this@WechatHandler.mSocialShareListener?.onError(
                         "${platform}:${way}",
                         Throwable(XSocialErrorCode.UnKnowCode.message + XSocialText.SHARE.SHARE_CONTENT_FAIL)
                     )

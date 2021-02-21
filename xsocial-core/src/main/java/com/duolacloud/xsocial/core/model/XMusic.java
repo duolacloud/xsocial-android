@@ -1,60 +1,114 @@
 package com.duolacloud.xsocial.core.model;
 
-import android.os.Parcel
-import com.duolacloud.xsocial.core.utils.SocializeProtocolConstants
+import android.os.Parcel;
+import com.duolacloud.xsocial.core.utils.SocializeProtocolConstants;
 
-class XMusic: BaseMediaObject {
-    // f
-    private var lowBandDataUrl: String? = null
-        get() = field
-        set(value) { field = value }
+import java.util.HashMap;
+import java.util.Map;
 
-    // g
-    var highBandDataUrl: String? = null
-        get() = field
-        set(value) { field = value }
-
-    // h
-    var h5Url: String? = null
-        get() = field
-        set(value) { field = value }
-
-    // i
-    var lowBandUrl: String? = null
-        get() = field
-        set(value) { field = value }
-
-    // j
-    var duration: Int? = null
-        get() = field
-        set(value) { field = value }
-
-    // k
-    var targetUrl: String? = null
-        get() = field
-        set(value) { field = value }
-
-
-    constructor(v: String): super(v)
-
-    fun getMediaType(): XMediaObject.MediaType = XMediaObject.MediaType.MUSIC
-
-    protected constructor(parcel: Parcel): super(parcel)
-
-    fun toUrlExtraParams(): Map<String, Any> {
-        val extraParams = mutableMapOf<String, Any>()
-        if (this.isUrlMedia) {
-            extraParams[SocializeProtocolConstants.PROTOCOL_KEY_FURL] = this.url
-            extraParams[SocializeProtocolConstants.PROTOCOL_KEY_FTYPE] = this.getMediaType()
-            extraParams[SocializeProtocolConstants.PROTOCOL_KEY_TITLE] = this.title
+public class XMusic extends BaseMediaObject {
+    public static class Builder extends BaseMediaObject.Builder<XMusic> {
+        public Builder() {
+            ref = new XMusic();
         }
 
-        return extraParams
+        public Builder targetUrl(String targetUrl) {
+            ref.targetUrl = targetUrl;
+            return this;
+        }
+
+        public Builder duration(int duration) {
+            ref.duration = duration;
+            return this;
+        }
+
+        public Builder lowBandUrl(String lowBandUrl) {
+            ref.lowBandUrl = lowBandUrl;
+            return this;
+        }
+        public Builder lowBandDataUrl(String lowBandDataUrl) {
+            ref.lowBandDataUrl = lowBandDataUrl;
+            return this;
+        }
+
+        public Builder highBandDataUrl(String highBandDataUrl) {
+            ref.highBandDataUrl = highBandDataUrl;
+            return this;
+        }
+
+        public Builder h5Url(String h5Url) {
+            ref.h5Url = h5Url;
+            return this;
+        }
     }
 
-    fun toByte(): ByteArray? = this.thumb?.toByte()
+    private String lowBandDataUrl;
 
-    override fun toString() = "UMusic [title=${title}, media_url=${url}, title=${title}, qzone_thumb=]"
+    private String highBandDataUrl;
 
-    override fun getThumbImage(): XImage? = thumb
+    private String h5Url;
+
+    private String lowBandUrl;
+
+    // j
+    private int duration;
+
+    // k
+    private String targetUrl;
+
+    @Override
+    public XMediaObject.MediaType getMediaType() {
+        return XMediaObject.MediaType.MUSIC;
+    }
+
+    private XMusic() {}
+
+    protected XMusic(Parcel parcel) {
+        super(parcel);
+    }
+
+    public String getLowBandDataUrl() {
+        return lowBandDataUrl;
+    }
+
+    public String getHighBandDataUrl() {
+        return highBandDataUrl;
+    }
+
+    public String getH5Url() {
+        return h5Url;
+    }
+
+    public String getLowBandUrl() {
+        return lowBandUrl;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public String getTargetUrl() {
+        return targetUrl;
+    }
+
+    public Map<String, Object> toUrlExtraParams() {
+        Map<String, Object> extraParams = new HashMap<>();
+        if (this.isUrlMedia()) {
+            extraParams.put(SocializeProtocolConstants.PROTOCOL_KEY_FURL, this.url);
+            extraParams.put(SocializeProtocolConstants.PROTOCOL_KEY_FTYPE, this.getMediaType());
+            extraParams.put(SocializeProtocolConstants.PROTOCOL_KEY_TITLE, this.title);
+        }
+
+        return extraParams;
+    }
+
+    @Override
+    public byte[] toByte() {
+        return this.thumb != null ? this.thumb.toByte() : null;
+    }
+
+    @Override
+    public String toString() {
+        return "XMusic [media_url=" + url + ", title=" + title + "]";
+    }
 }

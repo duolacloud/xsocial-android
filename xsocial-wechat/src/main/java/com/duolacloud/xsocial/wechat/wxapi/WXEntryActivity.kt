@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import com.duolacloud.xsocial.wechat.WechatHandler
 import com.duolacloud.xsocial.core.XSocialAPI
+import com.duolacloud.xsocial.wechat.WechatHandler
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
@@ -17,7 +17,7 @@ open class WXEntryActivity : Activity(), IWXAPIEventHandler {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mWechatHandler = XSocialAPI.getHandler<WechatHandler>("wechat:mobile")
+        mWechatHandler = XSocialAPI.getHandler<WechatHandler>("wechat")
         mWechatHandler?.wxApi?.handleIntent(intent, this)
     }
 

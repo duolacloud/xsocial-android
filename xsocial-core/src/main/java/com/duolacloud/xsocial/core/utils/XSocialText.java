@@ -95,7 +95,7 @@ public class XSocialText {
 
     public static class SHAREBOARD {
         public static String NULLNAME = "[SSB10000]获取平台名字为空，请检查代码";
-        public static String NULLJAR = "[SSB10001]您的工程需要依赖v4或我们提供umeng_shareboard_widget包，请参考线上文档";
+        public static String NULLJAR = "[SSB10001]您的工程需要依赖v4或我们提供xsocial_shareboard_widget包，请参考线上文档";
 
         public SHAREBOARD() {
         }
@@ -119,24 +119,6 @@ public class XSocialText {
         }
     }
 
-    public static class WX {
-        public static String WX_NO_CALLBACK = "为什么微信没有回调？";
-        public static String WX_CIRCLE_NOCONTENT = "为什么微信朋友圈链接不显示描述文字？";
-        public static String WX_40125 = "为什么微信提示40125/invalid APPsecret？";
-        public static String WX_HIT_PUSH = "为什么微信分享提示hit push hold？";
-        public static String WX_NO_LINK = "为什么微信登陆提示该链接无法访问？";
-        public static String WX_ERROR_SIGN = "为什么微信授权一直等待不能成功？";
-        public static String WX_NOTHUMB_EMOJ = "微信表情分享没有设置缩略图";
-        public static String WX_CIRCLE_NOT_SUPPORT_EMOJ = "微信朋友圈不支持表情分享...";
-        public static String WX_CIRCLE_NOT_SUPPORT_MIN = "微信朋友圈不支持小程序分享...";
-        public static String WX_NOACTIVITY = "[SX10000]您没有配置WXEntryActivity或没有配置不正确";
-        public static String WX_ERRORACTIVITY = "[SX10000]请让您的WXEntryActivity继承com.umeng.socialize.weixin.view.WXCallbackActivity";
-        public static String WX_ERRORMANIFEST = "[SX10000]请在AndroidManifest文件中配置WXEntryActivity";
-
-        public WX() {
-        }
-    }
-
     public static class SINA {
         public static String SINA_THUMB_ERROR = "[SS10007]新浪多媒体分享，需要添加缩略图，请检查是否添加正确";
         public static String SINASTARTERROR = "[SS10008]启动新浪客户端错误";
@@ -145,7 +127,7 @@ public class XSocialText {
         public static String SINA_SIGN_ERROR = "[SS10001]新浪签名或回调地址错误，请去后台检查";
         public static String SINA_GET_ERROR = "[SS10011]返回结果为空，请检查网络，或token是否过期,请检查Appkey是否审核通过";
         public static String SINA_UPLOAD_ERROR = "[SS10012]新浪上传图片失败";
-        public static String SINA_CALLBACKACTIVITY = "[SS10013]请在AndroidManifest文件中配置com.umeng.socialize.media.WBShareCallBackActivity";
+        public static String SINA_CALLBACKACTIVITY = "[SS10013]请在AndroidManifest文件中配置com.duolacloud.xsocial.media.WBShareCallBackActivity";
         public static String SINA_WEBACTIVITY = "[SS10013]请在AndroidManifest文件中配置com.sina.weibo.sdk.web.WeiboSdkWebActivity";
         public static String SINA_TRANSACTIVITY = "[SS10013]请在AndroidManifest文件中配置com.sina.weibo.sdk.share.WbShareTransActivity";
 
@@ -170,8 +152,8 @@ public class XSocialText {
         public static String FACEBOOK_CANCEL_SUCCESS = "为什么facebook分享取消却回调成功？";
         public static String FACEBOOK_AUTH_FAIL = "为什么facebook分享失败？";
         public static String FACEBOOK_NET_SUPPORT = "facebook网页链接，缩略图必须为网络图片";
-        public static String NOFACEBOOKACTIVITY = "[SF10000]您没有在AndroidManifest.xml中配置com.umeng.facebook.FacebookActivity";
-        public static String NOFACEBOOKCONTENTPROVIDER = "[SF10000]您没有在AndroidManifest.xml中配置com.umeng.facebook.FacebookContentProvider";
+        public static String NOFACEBOOKACTIVITY = "[SF10000]您没有在AndroidManifest.xml中配置com.duolacloud.xsocial.facebook.FacebookActivity";
+        public static String NOFACEBOOKCONTENTPROVIDER = "[SF10000]您没有在AndroidManifest.xml中配置com.duolacloud.xsocial.facebook.FacebookContentProvider";
         public static String NOMETA = "[SF10000]您没有在AndroidManifest中配置facebook的appid";
         public static String ERRORMETA = "[SF10000]没有找到facebook_app_id，facebook的id必须写在string文件中且名字必须用facebook_app_id";
 

@@ -1,76 +1,23 @@
-package com.duolacloud.xsocial.core.model;
+package com.duolacloud.xsocial.core;
 
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.duolacloud.xsocial.core.CompressListener;
+import com.duolacloud.xsocial.core.model.BaseMediaObject;
+import com.duolacloud.xsocial.core.model.XImage;
+import com.duolacloud.xsocial.core.model.XMusic;
 import com.duolacloud.xsocial.core.utils.ContextUtil;
 import com.duolacloud.xsocial.core.utils.MediaUtils;
 import com.duolacloud.xsocial.core.utils.XSocialText;
 
-import java.io.File;
-
 public class SimpleShareContentConvertor {
-    private XVideo video;
-    private XEmoji xEmoji;
-    private XMusic music;
-    private XMin min;
-    private XWeb web;
-    private File file;
-    private BaseMediaObject baseMediaObject;
-    private int style;
-    private String strStyle;
-    private String subject;
     public static final int THUMB_LIMIT = 24576;
     public static final int WX_THUMB_LIMIT = 18432;
     public static final int WX_MIN_LIMIT = 131072;
-    public final int IMAGE_LIMIT = 491520;
-    public final String DEFAULT_TITLE = "这里是标题";
-    public final String DEFAULT_DESCRIPTION = "这里是描述";
-    private CompressListener compressListener;
 
-    public SimpleShareContentConvertor(ShareContent content) {
-        if (content.mMedia != null && content.mMedia instanceof XMusic) {
-            this.music = (XMusic)content.mMedia;
-            this.baseMediaObject = this.music;
-        }
-
-        if (content.mMedia != null && content.mMedia instanceof XVideo) {
-            this.video = (XVideo)content.mMedia;
-            this.baseMediaObject = this.video;
-        }
-
-        if (content.mMedia != null && content.mMedia instanceof XEmoji) {
-            this.xEmoji = (XEmoji)content.mMedia;
-            this.baseMediaObject = this.xEmoji;
-        }
-
-        if (content.mMedia != null && content.mMedia instanceof XWeb) {
-            this.web = (XWeb)content.mMedia;
-            this.baseMediaObject = this.web;
-        }
-
-        if (content.mMedia != null && content.mMedia instanceof XMin) {
-            this.min = (XMin)content.mMedia;
-            this.baseMediaObject = this.web;
-        }
-
-        if (content.file != null) {
-            this.file = content.file;
-        }
-
-        this.subject = content.subject;
-        this.style = content.getShareType();
-        this.strStyle = this.a();
-    }
-
-    public void setCompressListener(CompressListener var1) {
-        this.compressListener = var1;
-    }
-
-    private String a() {
-        switch(this.style) {
+    public static String getShareTypeStr(int shareType) {
+        switch(shareType) {
             case 1:
                 return "text";
             case 2:
@@ -92,58 +39,6 @@ public class SimpleShareContentConvertor {
             default:
                 return "error";
         }
-    }
-
-    public File getFile() {
-        return this.file;
-    }
-
-    public XEmoji getEmoji() {
-        return this.xEmoji;
-    }
-
-    public BaseMediaObject getBaseMediaObject() {
-        return this.baseMediaObject;
-    }
-
-    public String getSubject() {
-        return this.subject;
-    }
-
-    public String getAssertSubject() {
-        return TextUtils.isEmpty(this.subject) ? "xsocialshare" : this.subject;
-    }
-
-    public String getStrStyle() {
-        return this.strStyle;
-    }
-
-    public int getStyle() {
-        return this.style;
-    }
-
-    public XWeb getWeb() {
-        return this.web;
-    }
-
-    public XMin getMin() {
-        return this.min;
-    }
-
-    public XImage[] getXImages() {
-        return this.images;
-    }
-
-    public XMusic getMusic() {
-        return this.music;
-    }
-
-    public void setVideo(XVideo video) {
-        this.video = video;
-    }
-
-    public XVideo getVideo() {
-        return this.video;
     }
 
     public static String objectSetTitle(BaseMediaObject mediaObject) {
@@ -192,28 +87,27 @@ public class SimpleShareContentConvertor {
         if (mediaObject.getThumb() == null) {
             return getIconBytes();
         } else {
-            Object var2 = null;
-            byte[] var5;
+            byte[] bytes;
             if (compressListener != null) {
-                XImage var3 = mediaObject.getThumb();
-                if (var3 == null) {
+                XImage thumb = mediaObject.getThumb();
+                if (thumb == null) {
                     return new byte[1];
                 }
 
-                byte[] var4 = var3.asBinImage();
-                var5 = var4;
-                if (var4 == null || MediaUtils.getScale(var3) > THUMB_LIMIT) {
-                    var5 = compressListener.compress(var4);
+                byte[] binImage = thumb.asBinImage();
+                bytes = binImage;
+                if (binImage == null || MediaUtils.getScale(thumb) > THUMB_LIMIT) {
+                    bytes = compressListener.compress(binImage);
                 }
             } else {
-                var5 = MediaUtils.a(mediaObject.getThumb(), THUMB_LIMIT);
-                if (var5 == null || var5.length <= 0) {
+                bytes = MediaUtils.compressMedia(mediaObject.getThumb(), THUMB_LIMIT);
+                if (bytes == null || bytes.length <= 0) {
                     Log.e("xsocial", XSocialText.IMAGE.SHARECONTENT_THUMB_ERROR);
-                    var5 = getIconBytes();
+                    bytes = getIconBytes();
                 }
             }
 
-            return var5;
+            return bytes;
         }
     }
 
@@ -252,7 +146,7 @@ public class SimpleShareContentConvertor {
         if (image.getThumb() == null) {
             return getIconBytes();
         } else {
-            byte[] bytes = MediaUtils.a(image.getThumb(), WX_THUMB_LIMIT);
+            byte[] bytes = MediaUtils.compressMedia(image.getThumb(), WX_THUMB_LIMIT);
             if (bytes == null || bytes.length <= 0) {
                 Log.e("xsocial", XSocialText.IMAGE.SHARECONTENT_THUMB_ERROR);
                 bytes = getIconBytes();
@@ -266,7 +160,7 @@ public class SimpleShareContentConvertor {
         byte[] bytes = new byte[1];
         if (ContextUtil.getIcon() != 0) {
             XImage image = new XImage.Builder().context(ContextUtil.getContext()).data(ContextUtil.getIcon()).build();
-            bytes = MediaUtils.a(image, WX_THUMB_LIMIT);
+            bytes = MediaUtils.compressMedia(image, WX_THUMB_LIMIT);
 
             if (bytes == null || bytes.length <= 0) {
                 Log.e("xsocial", XSocialText.IMAGE.SHARECONTENT_THUMB_ERROR);
@@ -282,7 +176,7 @@ public class SimpleShareContentConvertor {
 
     public static byte[] getStrictImageData(XImage image) {
         if (getXImageScale(image) > 491520) {
-            byte[] var2 = MediaUtils.a(image, 491520);
+            byte[] var2 = MediaUtils.compressMedia(image, 491520);
             if (var2 != null && var2.length > 0) {
                 return var2;
             } else {
